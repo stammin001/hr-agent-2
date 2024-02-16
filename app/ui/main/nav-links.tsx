@@ -2,18 +2,26 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  FunnelIcon
 } from '@heroicons/react/24/outline';
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  { name: 'Main', href: '/main', icon: HomeIcon },
   {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
+    name: 'My Info',
+    href: '/main/myinfo',
+    icon: UserGroupIcon,
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+  { name: 'Simple Chats', 
+    href: '/main/chats', 
+    icon: DocumentDuplicateIcon
+  },
+  { name: 'Agent Chats', 
+    href: '/main/agent-chats', 
+    icon: FunnelIcon
+  },
 ];
 
 export default function NavLinks() {
