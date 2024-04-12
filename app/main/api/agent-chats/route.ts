@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
           : '',
       );
 
-    const hubPrompt = await hub.pull<ChatPromptTemplate>('hragent-1/mainagent-1');
+  //  const hubPrompt = await hub.pull<ChatPromptTemplate>('hragent-1/mainagent-1');
     const updatedContextMessage = contextMessage.concat('  test');
     const tavilyTool = new TavilySearchResults({ maxResults: 1 });
 
@@ -107,8 +107,8 @@ export async function POST(req: NextRequest) {
     const agent = await createOpenAIFunctionsAgent({
       llm: chat,
       tools,
-      prompt: hubPrompt,
-//      prompt: prompt,
+//      prompt: hubPrompt,
+      prompt: prompt,
     });
 
     const agentExecutor = new AgentExecutor({
