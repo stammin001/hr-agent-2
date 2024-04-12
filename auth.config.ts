@@ -25,8 +25,8 @@ export const authConfig = {
       }
       return Promise.resolve(token);
     },
-    session: async ({session, token}) => {
-      session.user.id = token.id;
+    session: async ({session}) => {
+      session.user.id = '012553';
       console.log('Session:', session);
       return Promise.resolve(session);
     }
