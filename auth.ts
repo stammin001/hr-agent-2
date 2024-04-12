@@ -20,6 +20,7 @@ async function getUser(email: string): Promise<User | undefined> {
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  session: { strategy: 'jwt'},
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -32,7 +33,7 @@ export const { auth, signIn, signOut } = NextAuth({
           const user = await getUser(email);
           if (!user) return null;
           console.log('User:', user);
-          return user;
+          return Promise.resolve(user);
           //const passwordsMatch = await bcrypt.compare(password, user.password);
           //if (passwordsMatch) return user;
         }

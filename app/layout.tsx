@@ -1,4 +1,5 @@
 import '@/app/ui/global.css';
+import SessionWrapper from './components/SessionWrapper';
 
 export default function RootLayout({
   children,
@@ -6,8 +7,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    // SessionWrapper may not be needed in this app
+    <SessionWrapper>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </SessionWrapper>
   );
 }

@@ -1,30 +1,25 @@
-import { DynamicTool, Tool } from '@langchain/core/tools';
-import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
-import { RedisVectorStore } from '@langchain/redis';
+import { DynamicStructuredTool, DynamicTool, DynamicToolInput } from '@langchain/core/tools';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
-import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
-import { createRetrievalChain } from 'langchain/chains/retrieval';
-import { redisClient } from '../../lib/redis_client';
+import { getRetrievalChain, getRelevantData } from '../../lib/redis_vectorstore';
 
-//export const runtime = 'edge';
+import { z } from "zod";
 
 export const policiesTool = new DynamicTool({
   name: 'Policies',
-  description: `Initializes with all policies data for GMS. If any information is not found, please say you don't know. \
-                Do not make up answers. For each answer, provide source in brackets. Do not repeat the same source information in the same line. \
-                Do not call this tool more than 2 times. In the final response, always replace word KPPRA with GMS`,
-  func: async (input: string) => {
+  description: `Initializes with all HR related policies and procedures for employees in GMS.`,
+  func: async (input) => {
     console.log('\n *** policiesTool input:', input, '\n');
 
+    if(input === undefined || input === null || input === '' || input === '"{}"') {
+      return 'Sorry... Please provide information to search for';
+    }
+
     try {
-      const model = new ChatOpenAI({
-        modelName: 'gpt-3.5-turbo-1106',
-        temperature: 0,
-      });
+
       const questionAnsweringPrompt = ChatPromptTemplate.fromMessages([
         [
           'system',
-          `Do not make up answers. For each answer, provide source in brackets. \
+          `Do not make up answers. For each answer, provide page number or source in brackets. \
            Do not repeat the same source information in the same line. \
            In the response, replace word KPPRA with GMS. \
            Answer the user's questions in sequential numbers based on the below context:\n\n {context} \
@@ -33,35 +28,14 @@ export const policiesTool = new DynamicTool({
         ['human', '{input}'],
       ]);
 
-      const client = await redisClient();
-
-      if (client === null) {
-        console.log('Redis client not initialized');
-        throw new Error('Redis client not initialized');
-      }
-
-      const vectorStore = new RedisVectorStore(new OpenAIEmbeddings(), {
-        redisClient: client,
-        indexName: 'hr_policies',
-      });
-
-      const combineDocsChain = await createStuffDocumentsChain({
-        llm: model,
-        prompt: questionAnsweringPrompt,
-      });
-
-      if (vectorStore === null) {
-        throw new Error('Vector Store not initialized');
-      }
-
-      const chain = await createRetrievalChain({
-        retriever: vectorStore.asRetriever(),
-        combineDocsChain,
-      });
+      const chain = await getRetrievalChain(
+        questionAnsweringPrompt,
+        'hr_policies',
+      );
 
       const chainRes = await chain.invoke({ input: input });
 
-      console.log('\n *** Chain Response: ', chainRes, '\n');
+      console.log('\n *** Chain Response: \n', chainRes);
 
       return chainRes.answer;
     } catch (error) {
@@ -70,3 +44,46 @@ export const policiesTool = new DynamicTool({
     }
   },
 });
+
+export const policiesTool_2 = new DynamicTool({
+  name: 'Policies',
+  description: `Initializes with all HR related policies and procedures for employees in GMS.`,
+  func: async (input) => {
+    console.log('\n *** policiesTool_2 input:', input, '\n');
+
+    if(input === undefined || input === null || input === '' || input === '"{}"') {
+      return 'Sorry... Please provide information to search for';
+    }
+
+    let id;
+
+    if(isJSON(input)) {
+      const inputObject = JSON.parse(input);
+      input = inputObject.input;
+      id = inputObject.ID;
+    }
+    
+    console.log("Input: ", input, "ID: ", id, "\n");
+
+    try {
+
+      const data = await getRelevantData(input, 'hr_policies');
+
+      console.log('\n *** VectorStore Data: \n', data);
+
+      return data;
+    } catch (error) {
+      console.log('\n *** policiesTool_2 error:', error, '\n');
+      return "Sorry... Error in retrieving data";
+    }
+  },
+});
+
+function isJSON(input: string) {
+  try {
+      JSON.parse(input);
+  } catch (e) {
+      return false;
+  }
+  return true;
+}

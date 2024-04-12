@@ -1,5 +1,5 @@
-## Next.js App Router Course - Starter
+## HR-Agent
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+This is an experimental app for HR-Agent. It contains basic Q&A features.
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+

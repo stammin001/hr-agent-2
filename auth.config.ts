@@ -1,9 +1,11 @@
 import type { NextAuthConfig } from 'next-auth';
- 
+import type { SessionCallbackParams } from 'next-auth';
+
 export const authConfig = {
   pages: {
     signIn: '/login',
   },
+  session: { strategy: 'jwt' },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
@@ -16,6 +18,18 @@ export const authConfig = {
       }
       return true;
     },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+      return Promise.resolve(token);
+    },
+    session: async ({session, token}) => {
+      session.user.id = token.id;
+      console.log('Session:', session);
+      return Promise.resolve(session);
+    }
   },
   providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
