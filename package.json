@@ -1,0 +1,67 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "prettier": "prettier --write --ignore-unknown .",
+    "prettier:check": "prettier --check --ignore-unknown .",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.19.1",
+    "@heroicons/react": "^2.0.18",
+    "@langchain/anthropic": "^0.1.9",
+    "@langchain/community": "^0.0.21",
+    "@langchain/core": "^0.1.52",
+    "@langchain/langgraph": "^0.0.10",
+    "@langchain/openai": "^0.0.13",
+    "@langchain/redis": "^0.0.1",
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/node": "20.5.7",
+    "@types/react": "18.2.17",
+    "@types/react-dom": "18.2.7",
+    "@vercel/postgres": "^0.5.0",
+    "ai": "^2.1.28",
+    "autoprefixer": "10.4.15",
+    "bcrypt": "^5.1.1",
+    "clsx": "^2.0.0",
+    "crypto": "npm:crypto-browserify",
+    "esbuild-register": "^3.5.0",
+    "esm": "^3.2.25",
+    "js-yaml": "^4.1.0",
+    "langchain": "^0.1.30",
+    "langsmith": "^0.1.6",
+    "net": "^1.0.2",
+    "next": "^14.0.2",
+    "next-auth": "^5.0.0-beta.5",
+    "postcss": "8.4.31",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-toastify": "^10.0.4",
+    "redis": "^4.6.13",
+    "tailwindcss": "3.3.3",
+    "tls": "^0.0.1",
+    "typescript": "5.2.2",
+    "zod": "^3.22.2",
+    "zod-to-json-schema": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.14",
+    "@vercel/style-guide": "^5.0.1",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.52.0",
+    "eslint-config-next": "^14.0.0",
+    "eslint-config-prettier": "9.0.0",
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "0.5.4"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "browser": {
+    "crypto": false
+  }
+}
